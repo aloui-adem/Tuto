@@ -1,0 +1,13 @@
+# Node dependencies & builds
+node_modules/
+dist/
+dist-electron/
+
+# Python Virtual Environment & Cache
+backend/venv/
+backend/__pycache__/
+*.pyc
+
+# Environment variables
+.env
+backend/.env
