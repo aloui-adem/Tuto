@@ -5,3 +5,4 @@ pyautogui
 pillow
 openai
 python-dotenv
+mss

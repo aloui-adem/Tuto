@@ -1,5 +1,5 @@
 
-import { Users, Paperclip, ArrowUp, Bot } from 'lucide-react'
+import { Users, Paperclip, ArrowUp, Bot, FileText, X } from 'lucide-react'
 import { useState, useRef } from 'react'
 
 

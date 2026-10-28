@@ -1,30 +1,59 @@
-# React + TypeScript + Vite
+# Agent Desktop UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An Electron and React desktop interface for a vision-enabled local agent. The React UI sends goals over WebSocket to a FastAPI backend, which captures the screen and asks a local OpenAI-compatible vision model for the next action.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js 18+
+- Python 3.10+
+- A local OpenAI-compatible vision server, such as Ollama
+- Windows desktop for the current screen-control implementation
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Install JavaScript and Python dependencies:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```powershell
+npm install
+python -m pip install -r backend/requirements.txt
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Copy the example environment file and adjust it if needed:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+```
+
+Available settings:
+
+- `LOCAL_LLM_URL`: OpenAI-compatible server URL (default: `http://localhost:11434/v1`)
+- `VISION_MODEL_NAME`: vision model name (default: `llava`)
+- `OPENAI_API_KEY`: only needed for servers that require authentication
+
+Start the backend and desktop UI in separate terminals:
+
+```powershell
+python backend/main.py
+npm run dev
+```
+
+## Build
+
+```powershell
+npm run lint
+npx tsc --noEmit
+npm run build
+python -m compileall -q backend
+```
+
+## Safety
+
+This project can inspect the desktop and issue agent actions. Keep the backend on loopback, review goals before running them, and never commit `backend/.env` or other secrets. Do not expose the WebSocket server to untrusted networks.
+
+## Stack
+
+- Electron and Vite
+- React
+- FastAPI and WebSocket
+- OpenAI-compatible vision model
+- PyAutoGUI, mss, and Pillow
