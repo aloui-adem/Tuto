@@ -1,59 +1,47 @@
-# Agent Desktop UI
+# Tuto
 
-An Electron and React desktop interface for a vision-enabled local agent. The React UI sends goals over WebSocket to a FastAPI backend, which captures the screen and asks a local OpenAI-compatible vision model for the next action.
+Tuto is a desktop assistant that guides users through tasks on their screen using a separate visual cursor.
 
-## Requirements
+The idea is simple: you give it a task, it analyzes the screen, identifies where to go next, and moves its visual cursor toward the target. The cursor is separate from the system mouse.
 
-- Node.js 18+
-- Python 3.10+
-- A local OpenAI-compatible vision server, such as Ollama
-- Windows desktop for the current screen-control implementation
+**Status:** Work in progress.
 
-## Setup
+## How it works
 
-Install JavaScript and Python dependencies:
+1. The desktop app receives the task.
+2. The screen is captured and sent for AI analysis.
+3. The model identifies the next target.
+4. Tuto moves its visual cursor toward that target.
 
-```powershell
-npm install
-python -m pip install -r backend/requirements.txt
-```
+The goal is to make it easier to follow instructions and navigate applications without having to search for every button yourself.
 
-Copy the example environment file and adjust it if needed:
+## Tech stack
 
-```powershell
-Copy-Item backend/.env.example backend/.env
-```
+- **Electron** — desktop application
+- **React** — user interface
+- **Python / FastAPI** — backend
+- **OpenRouter** — access to vision-capable language models
 
-Available settings:
+## Current limitations
 
-- `LOCAL_LLM_URL`: OpenAI-compatible server URL (default: `http://localhost:11434/v1`)
-- `VISION_MODEL_NAME`: vision model name (default: `llava`)
-- `OPENAI_API_KEY`: only needed for servers that require authentication
+- Target detection depends on the model's accuracy.
+- Responses can be slow, especially when a new API request is needed for each target.
+- Cross-application guidance and reliability still need improvement.
 
-Start the backend and desktop UI in separate terminals:
+## Running locally
 
-```powershell
-python backend/main.py
-npm run dev
-```
+Setup instructions are not finalized yet. The frontend and backend need to be configured separately, including the required environment variables and API access.
 
-## Build
+Do not commit API keys or other secrets to the repository.
 
-```powershell
-npm run lint
-npx tsc --noEmit
-npm run build
-python -m compileall -q backend
-```
+## Roadmap
 
-## Safety
+- [ ] Improve target detection accuracy
+- [ ] Reduce the delay between actions
+- [ ] Improve guidance across different applications
+- [ ] Handle failed or uncertain predictions safely
+- [ ] Document installation and configuration
 
-This project can inspect the desktop and issue agent actions. Keep the backend on loopback, review goals before running them, and never commit `backend/.env` or other secrets. Do not expose the WebSocket server to untrusted networks.
+## Author
 
-## Stack
-
-- Electron and Vite
-- React
-- FastAPI and WebSocket
-- OpenAI-compatible vision model
-- PyAutoGUI, mss, and Pillow
+[Adem Aloui](https://github.com/aloui-adem)
